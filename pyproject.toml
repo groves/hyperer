@@ -10,7 +10,7 @@ python = "^3.10"
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
-hrg = 'litterbox.hrg:main'
+hyperlinked_ripgrep = 'litterbox.hrg:main'
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
