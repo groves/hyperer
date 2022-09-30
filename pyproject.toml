@@ -10,6 +10,7 @@ python = "^3.10"
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
+hyperlinked_cargo = 'litterbox.hcargo:main'
 hyperlinked_ripgrep = 'litterbox.hrg:main'
 
 [build-system]
