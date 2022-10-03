@@ -12,9 +12,8 @@ from .hrg import consume_process, write_hyperlink
 
 def main() -> None:
     in_result: bytes = [b'']
-    num_pat = re.compile(br'   --> (.+):(\d+):(\d+)')
-    write = sys.stderr.buffer.write
-    def line_handler(raw_line, clean_line):
+    num_pat = re.compile(br' +--> (.+):(\d+):(\d+)')
+    def line_handler(raw_line, clean_line, write):
         m = num_pat.match(clean_line)
         if m is not None:
             write_hyperlink(write, m.group(1), line=raw_line, frag=m.group(2))
