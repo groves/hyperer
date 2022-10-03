@@ -26,7 +26,6 @@ def write_hyperlink(write: Callable[[bytes], None], path: str, line: bytes, frag
 
 
 def consume_process(p, stream, line_handler):
-    write: Callable[[bytes], None] = cast(Callable[[bytes], None], sys.stdout.buffer.write)
     sgr_pat = re.compile(br'\x1b\[.*?m')
     osc_pat = re.compile(b'\x1b\\].*?\x1b\\\\')
 
@@ -35,7 +34,7 @@ def consume_process(p, stream, line_handler):
         for line in stream:
             line = osc_pat.sub(b'', line)  # remove any existing hyperlinks
             clean_line = sgr_pat.sub(b'', line).rstrip()  # remove SGR formatting
-            line_handler(line, clean_line, write)
+            line_handler(line, clean_line)
     except KeyboardInterrupt:
         p.send_signal(signal.SIGINT)
     except (EOFError, BrokenPipeError):
@@ -73,7 +72,8 @@ def main() -> None:
 
     in_result: bytes = [b'']
     num_pat = re.compile(br'^(\d+)([:-])')
-    def line_handler(raw_line, clean_line, write):
+    write = sys.stdout.buffer.write
+    def line_handler(raw_line, clean_line):
         if in_result[0]:
             m = num_pat.match(clean_line)
             if not clean_line:
