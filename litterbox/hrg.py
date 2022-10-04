@@ -25,22 +25,30 @@ def write_hyperlink(write: Callable[[bytes], None], path: str, line: bytes, frag
     write(text)
 
 
-def consume_process(p, stream, line_handler):
+def consume_process(p, line_handler):
+    def write(b):
+        sys.stdout.buffer.write(b)
+        # If we're in a pipe, we'll not have a tty and be block buffered
+        # Flush to avoid that.
+        # Can't easily turn off block buffering from inside the program
+        # https://stackoverflow.com/questions/881696/unbuffered-stdout-in-python-as-in-python-u-from-within-the-program
+        sys.stdout.buffer.flush()
     sgr_pat = re.compile(br'\x1b\[.*?m')
     osc_pat = re.compile(b'\x1b\\].*?\x1b\\\\')
-
-
     try:
-        for line in stream:
+        for line in p.stdout:
             line = osc_pat.sub(b'', line)  # remove any existing hyperlinks
             clean_line = sgr_pat.sub(b'', line).rstrip()  # remove SGR formatting
-            line_handler(line, clean_line)
+            line_handler(write, line, clean_line)
     except KeyboardInterrupt:
         p.send_signal(signal.SIGINT)
     except (EOFError, BrokenPipeError):
         pass
     finally:
-        stream.close()
+        try:
+            stream.close()
+        except:
+            pass
     raise SystemExit(p.wait())
 
 def main() -> None:
@@ -72,8 +80,7 @@ def main() -> None:
 
     in_result: bytes = [b'']
     num_pat = re.compile(br'^(\d+)([:-])')
-    write = sys.stdout.buffer.write
-    def line_handler(raw_line, clean_line):
+    def line_handler(write, raw_line, clean_line):
         if in_result[0]:
             m = num_pat.match(clean_line)
             if not clean_line:
@@ -100,7 +107,7 @@ def main() -> None:
     except FileNotFoundError:
         raise SystemExit('Could not find the rg executable in your PATH. Is ripgrep installed?')
 
-    consume_process(p, p.stdout, line_handler)
+    consume_process(p, line_handler)
 
 
 
