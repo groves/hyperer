@@ -23,7 +23,7 @@ def main() -> None:
                 return
         write(raw_line)
 
-    cmdline = ['cargo', '--color=always'] + sys.argv[1:]
+    cmdline = ['cargo'] + sys.argv[1:]
     try:
         # Capture both stdout and stderr as rustc uses stderr
         p = subprocess.Popen(cmdline, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
