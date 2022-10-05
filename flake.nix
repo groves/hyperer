@@ -13,7 +13,7 @@
       overlay = nixpkgs.lib.composeManyExtensions [
         poetry2nix.overlay
         (final: prev: {
-          litterbox = prev.poetry2nix.mkPoetryApplication {
+          hyperer = prev.poetry2nix.mkPoetryApplication {
             projectDir = ./.;
           };
         })
@@ -26,7 +26,7 @@
         };
       in
       {
-        packages.default = pkgs.litterbox;
+        packages.default = pkgs.hyperer;
 
         devShell = pkgs.mkShell { 
           buildInputs = [ pkgs.python3 pkgs.poetry ];

@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "litterbox"
+name = "hyperer"
 version = "0.1.0"
 description = ""
 authors = ["Charlie Groves <c@sevorg.org>"]
@@ -10,8 +10,8 @@ python = "^3.10"
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
-hyperlinked_cargo = 'litterbox.hcargo:main'
-hyperlinked_ripgrep = 'litterbox.hrg:main'
+hyperer-cargo = 'hyperer.hcargo:main'
+hyperer-rg = 'hyperer.hrg:main'
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
