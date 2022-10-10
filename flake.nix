@@ -29,7 +29,7 @@
         packages.default = pkgs.hyperer;
 
         devShell = pkgs.mkShell { 
-          buildInputs = [ pkgs.python3 pkgs.poetry ];
+          buildInputs = [ pkgs.python39Packages.poetry ];
         };
       }));
 }
