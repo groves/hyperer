@@ -7,7 +7,7 @@ For example, `hyperer-rg` runs [ripgrep] and links to the files it finds.
 
 Installation
 ============
-Run `pip install hyperer` to install the hyperer commands into your system Python.
+Install Python 3.9 or later and run `pip install hyperer` to install the hyperer commands into your system Python.
 Alternatively, if you're using the [Nix package manager], depend on the flake.nix in this repo.
 
 [Nix package manager]: https://nixos.org/manual/nix/stable/introduction.html
