@@ -1,7 +1,7 @@
 {
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs.url = "github:NixOS/nixpkgs/fd7a18259e351055b656f2cb1260d831edb9dd57";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     poetry2nix.url = "github:nix-community/poetry2nix";
     poetry2nix.inputs.flake-utils.follows = "flake-utils";
     poetry2nix.inputs.nixpkgs.follows = "nixpkgs";
