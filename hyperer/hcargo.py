@@ -10,7 +10,7 @@ from urllib.parse import quote_from_bytes
 from .hrg import consume_process, write_hyperlink
 
 
-def main() -> None:
+def main(argv, write=None) -> None:
     # right: `0`', src/main.rs:1012:9
     assert_pat = re.compile(br' +(?:left|right):.+ (.+):(\d+):(\d+)')
     # at /build/rustc-1.63.0-src/library/core/src/panicking.rs:181:5
@@ -23,14 +23,14 @@ def main() -> None:
                 return
         write(raw_line)
 
-    cmdline = ['cargo'] + sys.argv[1:]
+    cmdline = ['cargo'] + argv[1:]
     try:
         # Capture both stdout and stderr as rustc uses stderr
         p = subprocess.Popen(cmdline, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     except FileNotFoundError:
         raise SystemExit('Could not find the cargo executable in your PATH. Is it installed?')
 
-    consume_process(p, line_handler)
+    return consume_process(p, line_handler, write)
 
 if __name__ == '__main__':
-    main()
+    raise SystemExit(main(sys.argv))
