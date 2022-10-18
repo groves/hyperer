@@ -13,6 +13,9 @@ python = "^3.9"
 hyperer-cargo = 'hyperer.hcargo:main'
 hyperer-rg = 'hyperer.hrg:main'
 
+[tool.poetry.group.test.dependencies]
+pytest = "^7.1.3"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
