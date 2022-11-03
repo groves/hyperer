@@ -6,7 +6,7 @@ import subprocess
 import sys
 from . import make_hyperlink, consume_process
 
-def main(argv, write=None):
+def main(argv=sys.argv, write=None):
     if not sys.stdout.isatty() and '--pretty' not in argv and '-p' not in argv:
         os.execlp('rg', 'rg', *argv[1:])
 
@@ -31,6 +31,3 @@ def main(argv, write=None):
         raise SystemExit('Could not find the rg executable in your PATH. Is ripgrep installed?')
 
     return consume_process(p, line_handler, write)
-
-if __name__ == '__main__':
-    raise SystemExit(main(sys.argv))

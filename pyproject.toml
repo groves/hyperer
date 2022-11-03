@@ -10,8 +10,8 @@ python = "^3.9"
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
-hyperer-cargo = 'hyperer.hcargo:main'
-hyperer-rg = 'hyperer.hrg:main'
+hyperer-cargo = 'hyperer.cargo:main'
+hyperer-rg = 'hyperer.rg:main'
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.1.3"

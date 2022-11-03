@@ -1,5 +1,5 @@
 def test_rg():
-    from hyperer.hrg import main
+    from hyperer.rg import main
     output = []
     # Search for the one copy of the word 'INCIDENTAL' in the license file
     main(['hyperer-rg', '--pretty', 'INCIDENTAL', 'LICENSE'], output.append)
@@ -12,7 +12,7 @@ def test_rg():
     assert output[1].endswith(b'\x1b]8;;\x1b\\')
 
 def test_cargo_compile_failure(monkeypatch):
-    from hyperer.hcargo import main
+    from hyperer.cargo import main
     output = []
     monkeypatch.chdir('test_rust_projects/compile_fails')
     import re

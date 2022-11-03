@@ -3,7 +3,7 @@ import subprocess
 import sys
 from . import consume_process, make_hyperlink
 
-def main(argv, write=None) -> None:
+def main(argv=sys.argv, write=None) -> None:
     # right: `0`', src/main.rs:1012:9
     assert_pat = re.compile(br' +(?:left|right):.+ (.+):(\d+):(\d+)')
     # at /build/rustc-1.63.0-src/library/core/src/panicking.rs:181:5
@@ -24,6 +24,3 @@ def main(argv, write=None) -> None:
         raise SystemExit('Could not find the cargo executable in your PATH. Is it installed?')
 
     return consume_process(p, line_handler, write)
-
-if __name__ == '__main__':
-    raise SystemExit(main(sys.argv))
