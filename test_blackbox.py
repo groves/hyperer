@@ -17,5 +17,6 @@ def test_cargo_compile_failure(monkeypatch):
     monkeypatch.chdir('test_rust_projects/compile_fails')
     import re
     main(['hyperer-cargo', 'check'], output.append)
-    assert output[2].startswith(b'\x1b]8;;file://')
-    assert output[2].endswith(b'/hyperer/test_rust_projects/compile_fails/src/main.rs#3\x1b\\ --> src/main.rs:3:2\n\x1b]8;;\x1b\\')
+    print(output[2])
+    assert output[2].startswith(b'\x1b]8;line=3:column=2;file://')
+    assert output[2].endswith(b'/hyperer/test_rust_projects/compile_fails/src/main.rs#3:2\x1b\\ --> src/main.rs:3:2\n\x1b]8;;\x1b\\')

@@ -12,7 +12,11 @@ def main(argv=sys.argv, write=None) -> None:
     def line_handler(write, raw_line, clean_line):
         for pat in [assert_pat, btrace_pat, num_pat]:
             if m := pat.match(clean_line):
-                write(make_hyperlink(m.group(1), line=raw_line, frag=m.group(2)))
+                line_num = m.group(2)
+                col_num = m.group(3)
+                write(make_hyperlink(m.group(1), line=raw_line,
+                    frag=line_num + b':' + col_num, 
+                    params={b'line': line_num, b'column': col_num}))
                 return
         write(raw_line)
 

@@ -12,13 +12,19 @@ from urllib.parse import quote_from_bytes
 def hostname():
     return socket.gethostname().encode('utf-8')
 
-def make_hyperlink(path: str, line: bytes, frag: bytes = b'') -> None:
+def make_hyperlink(path: str, line: bytes, frag: bytes = b'', params: dict[bytes, bytes] = {}) -> None:
+    osc_8 = b'\x1b]8;'
+    string_terminator = b'\x1b\\'
+    params = b':'.join(k + b'=' + v for k, v in params.items())
     path = quote_from_bytes(os.path.abspath(path)).encode('utf-8')
-    link = [b'\033]8;;file://', hostname(), path]
-    if frag:
-        link.extend([b'#', frag])
-    link.extend([b'\033\\', line, b'\033]8;;\033\\'])
-    return b''.join(link)
+    frag = b'#' + frag if frag else b''
+    return b''.join([
+        # Open link
+        osc_8, params, b';file://', hostname(), path, frag, string_terminator,
+        # Link content
+        line,
+        # Close link
+        osc_8, b';', string_terminator])
 
 Writer = Callable[[bytes], None]
 
