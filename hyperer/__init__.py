@@ -1,0 +1,52 @@
+import functools
+import os
+import re
+import sys
+import signal
+import socket
+import subprocess
+from typing import Callable
+from urllib.parse import quote_from_bytes
+
+@functools.cache
+def hostname():
+    return socket.gethostname().encode('utf-8')
+
+def make_hyperlink(path: str, line: bytes, frag: bytes = b'') -> None:
+    path = quote_from_bytes(os.path.abspath(path)).encode('utf-8')
+    link = [b'\033]8;;file://', hostname(), path]
+    if frag:
+        link.extend([b'#', frag])
+    link.extend([b'\033\\', line, b'\033]8;;\033\\'])
+    return b''.join(link)
+
+Writer = Callable[[bytes], None]
+
+def consume_process(p: subprocess.Popen, 
+    line_handler: Callable[[Writer, str, str], None], 
+    write: Writer=None):
+    if write is None:
+        def write(b):
+            sys.stdout.buffer.write(b)
+            # If we're in a pipe, we'll not have a tty and be block buffered
+            # Flush to avoid that.
+            # Can't easily turn off block buffering from inside the program
+            # https://stackoverflow.com/questions/881696/unbuffered-stdout-in-python-as-in-python-u-from-within-the-program
+            sys.stdout.buffer.flush()
+    sgr_pat = re.compile(br'\x1b\[.*?m')
+    osc_pat = re.compile(b'\x1b\\].*?\x1b\\\\')
+    try:
+        for line in p.stdout:
+            line = osc_pat.sub(b'', line)  # remove any existing hyperlinks
+            clean_line = sgr_pat.sub(b'', line).rstrip()  # remove SGR formatting
+            line_handler(write, line, clean_line)
+    except KeyboardInterrupt:
+        p.send_signal(signal.SIGINT)
+    except (EOFError, BrokenPipeError):
+        pass
+    finally:
+        try:
+            stream.close()
+        except:
+            pass
+    return p.wait()
