@@ -5,11 +5,22 @@ def test_rg():
     main(['hyperer-rg', '--pretty', 'INCIDENTAL', 'LICENSE'], output.append)
 
     assert not output[0].startswith(b'\x1b]8;'), "Header line doesn't start with a link to the file"
-    assert b'hyperer/LICENSE#605\x1b\\\x1b' in output[1], "The match line links to the line"
+    assert b'hyperer/LICENSE#605:19\x1b\\\x1b' in output[1], "The match line links to the line"
 
-    assert output[1].startswith(b'\x1b]8;'), "Match line starts with a link to the file"
     assert b'INCIDENTAL' in output[1], "The match line contains the searched word INCIDENTAL"
-    assert output[1].endswith(b'\x1b]8;;\x1b\\')
+    assert output[1].endswith(b'THE\n')
+
+def test_rg_multimatch():
+    from hyperer.rg import main
+    output = []
+    # Search for the two copies of the word 'earlier' in the license file. They're on the same line.
+    main(['hyperer-rg', '--pretty', 'earlier', 'LICENSE'], output.append)
+
+    assert not output[0].startswith(b'\x1b]8;'), "Header line doesn't start with a link to the file"
+    assert b'hyperer/LICENSE#87:1\x1b\\\x1b' in output[1], "The match line links to the line"
+
+    assert b'earlier' in output[1], "The match line contains the searched word earlier"
+    assert output[1].endswith(b'work.\n')
 
 def test_cargo_compile_failure(monkeypatch):
     from hyperer.cargo import main
@@ -17,6 +28,5 @@ def test_cargo_compile_failure(monkeypatch):
     monkeypatch.chdir('test_rust_projects/compile_fails')
     import re
     main(['hyperer-cargo', 'check'], output.append)
-    print(output[2])
     assert output[2].startswith(b'\x1b]8;line=3:column=2;file://')
     assert output[2].endswith(b'/hyperer/test_rust_projects/compile_fails/src/main.rs#3:2\x1b\\ --> src/main.rs:3:2\n\x1b]8;;\x1b\\')

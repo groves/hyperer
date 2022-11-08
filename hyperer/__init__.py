@@ -28,6 +28,12 @@ def make_hyperlink(path: str, line: bytes, frag: bytes = b'', params: dict[bytes
 
 Writer = Callable[[bytes], None]
 
+sgr_pat = re.compile(br'\x1b\[.*?m')
+osc_pat = re.compile(b'\x1b\\].*?\x1b\\\\')
+def strip_ansi(line):
+    line = osc_pat.sub(b'', line)  # remove any existing hyperlinks
+    return sgr_pat.sub(b'', line)  # remove SGR formatting
+
 def consume_process(p: subprocess.Popen, 
     line_handler: Callable[[Writer, str, str], None], 
     write: Writer=None):
@@ -39,12 +45,9 @@ def consume_process(p: subprocess.Popen,
             # Can't easily turn off block buffering from inside the program
             # https://stackoverflow.com/questions/881696/unbuffered-stdout-in-python-as-in-python-u-from-within-the-program
             sys.stdout.buffer.flush()
-    sgr_pat = re.compile(br'\x1b\[.*?m')
-    osc_pat = re.compile(b'\x1b\\].*?\x1b\\\\')
     try:
         for line in p.stdout:
-            line = osc_pat.sub(b'', line)  # remove any existing hyperlinks
-            clean_line = sgr_pat.sub(b'', line).rstrip()  # remove SGR formatting
+            clean_line = strip_ansi(line).rstrip()
             line_handler(write, line, clean_line)
     except KeyboardInterrupt:
         p.send_signal(signal.SIGINT)
