@@ -43,7 +43,9 @@ def main(argv=sys.argv, write=None):
             in_result[0] = clean_line
         write(raw_line)
 
-    cmdline = ['rg', '--pretty', '--with-filename'] + argv[1:]
+    # rg 11 on ubuntu doesn't include color with --pretty, so we specify the --pretty options explicitly
+    # We also use --color=ansi instead of always as we parse ansi codes
+    cmdline = ['rg', '--with-filename', '--heading', '--color=ansi', '--line-number'] + argv[1:]
     try:
         p = subprocess.Popen(cmdline, stdout=subprocess.PIPE)
     except FileNotFoundError:
