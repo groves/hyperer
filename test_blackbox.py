@@ -1,3 +1,5 @@
+import pytest
+
 def test_rg():
     from hyperer.rg import main
     output = []
@@ -9,6 +11,13 @@ def test_rg():
 
     assert b'INCIDENTAL' in output[1], "The match line contains the searched word INCIDENTAL"
     assert output[1].endswith(b'THE\n')
+
+def test_no_format_altering_flags_rg():
+    from hyperer.rg import main
+    output = []
+    # Search for the one copy of the word 'INCIDENTAL' in the license file
+    with pytest.raises(SystemExit):
+        main(['hyperer-rg', '--column', 'INCIDENTAL', 'LICENSE'], output.append)
 
 def test_rg_multimatch():
     from hyperer.rg import main
