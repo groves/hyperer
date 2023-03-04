@@ -29,7 +29,7 @@
         packages.default = pkgs.hyperer;
 
         devShell = pkgs.mkShell { 
-          buildInputs = [ pkgs.python39Packages.poetry pkgs.cargo ];
+          buildInputs = with pkgs; [ poetry python39 cargo ];
         };
       }));
 }

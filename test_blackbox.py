@@ -10,7 +10,7 @@ def test_rg():
     assert b'hyperer/LICENSE#605:19\x1b\\\x1b' in output[1], "The match line links to the line"
 
     assert b'INCIDENTAL' in output[1], "The match line contains the searched word INCIDENTAL"
-    assert output[1].endswith(b'THE\n')
+    assert output[1].endswith(b'THE\n\x1b]8;;\x1b\\')
 
 def test_no_format_altering_flags_rg():
     from hyperer.rg import main
@@ -29,7 +29,7 @@ def test_rg_multimatch():
     assert b'hyperer/LICENSE#87:1\x1b\\\x1b' in output[1], "The match line links to the line"
 
     assert b'earlier' in output[1], "The match line contains the searched word earlier"
-    assert output[1].endswith(b'work.\n')
+    assert output[1].endswith(b'work.\n\x1b]8;;\x1b\\')
 
 def test_cargo_compile_failure(monkeypatch):
     from hyperer.cargo import main

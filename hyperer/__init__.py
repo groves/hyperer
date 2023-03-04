@@ -12,7 +12,7 @@ from urllib.parse import quote_from_bytes
 def hostname():
     return socket.gethostname().encode('utf-8')
 
-def make_hyperlink(path: str, line: bytes, frag: bytes = b'', params: dict[bytes, bytes] = {}) -> None:
+def make_hyperlink(path: str, line: bytes, frag: bytes = b'', params: dict[bytes, bytes] = {}) -> bytes:
     osc_8 = b'\x1b]8;'
     string_terminator = b'\x1b\\'
     params = b':'.join(k + b'=' + v for k, v in params.items())
