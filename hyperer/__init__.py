@@ -58,6 +58,7 @@ def consume_process(
     line_handler: Callable[[Writer, str, str], None],
     write: Optional[Writer] = None,
 ):
+    assert p.stdout is not None
     if write is None:
 
         def write(b: bytes) -> None:
@@ -78,7 +79,7 @@ def consume_process(
         pass
     finally:
         try:
-            stream.close()
+            p.stdout.close()
         except Exception:
             pass
     return p.wait()

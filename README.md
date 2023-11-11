@@ -14,10 +14,12 @@ Alternatively, if you're using the [Nix package manager], depend on the flake.ni
 
 Commands
 ========
-* hyperer-rg - wraps [ripgrep] and links to files it finds
 * hyperer-cargo - wraps [cargo] and links to compilation failures, test failures, and backtraces
+* hyperer-rg - wraps [ripgrep] and links to files it finds
+* hyperer-ruff - wraps [ruff] and links to failed checks
 
 [cargo]: https://doc.rust-lang.org/cargo/
+[ruff]: https://docs.astral.sh/ruff/
 
 Credit
 ======
