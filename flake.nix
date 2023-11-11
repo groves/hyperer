@@ -7,7 +7,12 @@
     poetry2nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, flake-utils, poetry2nix }:
+  outputs = {
+    self,
+    nixpkgs,
+    flake-utils,
+    poetry2nix,
+  }:
     {
       # Nixpkgs overlay providing the application
       overlay = nixpkgs.lib.composeManyExtensions [
@@ -15,21 +20,22 @@
         (final: prev: {
           hyperer = prev.poetry2nix.mkPoetryApplication {
             projectDir = ./.;
+            # checkGroups Default is [ "dev" ]. We remove that to keep from installing ruff as a nix dep, which is broken currently
+            checkGroups = [];
           };
         })
       ];
-    } // (flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [ self.overlay ];
-        };
-      in
-      {
-        packages.default = pkgs.hyperer;
+    }
+    // (flake-utils.lib.eachDefaultSystem (system: let
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [self.overlay];
+      };
+    in {
+      packages.default = pkgs.hyperer;
 
-        devShell = pkgs.mkShell { 
-          buildInputs = with pkgs; [ poetry python39 cargo ];
-        };
-      }));
+      devShell = pkgs.mkShell {
+        buildInputs = with pkgs; [poetry python39 cargo];
+      };
+    }));
 }
