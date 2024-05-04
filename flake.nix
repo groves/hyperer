@@ -23,10 +23,6 @@
         inherit hyperer;
         default = self.packages.${system}.hyperer;
       };
-      apps = pkgs.lib.genAttrs ["hyperer-cargo" "hyperer-rg" "hyperer-ruff"] (name: {
-        type = "app";
-        program = "${hyperer}/bin/${name}";
-      });
 
       devShells.default = pkgs.mkShell {
         inputsFrom = [self.packages.${system}.hyperer];
