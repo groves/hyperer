@@ -7,14 +7,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - run: pipx install poetry~=1.6.1
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-          cache: 'poetry'
-      - run: poetry install
+          python-version: '3.13'
+      - run: uv sync --dev
       - run: sudo apt-get install -y ripgrep
-      - run: poetry run pytest
-      - run: poetry run ruff check .
-      - run: poetry run ruff format --check .
+      - run: uv run pytest
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .

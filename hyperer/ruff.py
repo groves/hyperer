@@ -35,7 +35,7 @@ def main(argv=sys.argv, write=None):
 
     env = os.environ.copy()
     env["CLICOLOR_FORCE"] = "1"
-    cmdline = ["ruff"] + argv[1:]
+    cmdline = ["ruff"] + argv[1:] + ["--output-format=concise"]
     try:
         p = subprocess.Popen(cmdline, stdout=subprocess.PIPE, env=env)
     except FileNotFoundError:
