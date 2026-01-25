@@ -4,7 +4,12 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(uv lock:*)",
       "Bash(nix flake check:*)",
-      "Bash(nix develop:*)"
+      "Bash(nix develop:*)",
+      "Bash(uv sync:*)",
+      "Bash(uv run pytest:*)",
+      "Bash(CLICOLOR_FORCE=1 uv run ruff check:*)",
+      "Bash(uv run ruff:*)",
+      "Bash(uv run ruff format:*)"
     ]
   }
 }
